@@ -6,11 +6,15 @@ export default class Search extends Component {
   state = {
     search: '',
     productList: [],
+    lista: [],
+    categoryId: '',
   };
 
   handleChange = async ({ target }) => {
+    const { categorid } = this.props;
+    const { categoryId } = this.state;
     const { name, value } = target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value }, this.setState({ categoryId: categorid }));
   };
 
   onSaveButtonClick = async (event) => {
@@ -29,8 +33,14 @@ export default class Search extends Component {
       });
   };
 
+  handleLista = () => {
+    const { categorid } = this.props;
+    if (categorid.length > 0) console.log('é maior q 0');
+  };
+
   render() {
     const { productList } = this.state;
+    // this.teste(categorid);
     return (
       <form id="searchForm" onSubmit={ this.onSaveButtonClick }>
         <input
@@ -43,6 +53,7 @@ export default class Search extends Component {
           type="submit"
           data-testid="query-button"
           name="pesquisar"
+          onClick={ this.handleLista }
         >
           Pesquisar
         </button>

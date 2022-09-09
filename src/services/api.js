@@ -22,3 +22,9 @@ export async function getProductByQuery(query) {
   const response = await assets.json();
   return response;
 }
+
+export async function getProductByCategories(category) {
+  const assets = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${category}`);
+  const response = await assets.json();
+  return response;
+}
