@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { getCategories } from '../services/api';
 import Search from './Search';
 
-
 export default class Main extends Component {
   state = {
     categories: [],
