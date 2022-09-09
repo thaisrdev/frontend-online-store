@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getCategories } from '../services/api';
 import Search from './Search';
 
+
 export default class Main extends Component {
   state = {
     categories: [],
@@ -22,6 +23,7 @@ export default class Main extends Component {
             {element.name}
             <input data-testid="category" type="radio" id="category" />
           </label>))}
+
         <p data-testid="home-initial-message">
           Digite algum termo de pesquisa ou escolha uma categoria.
         </p>
