@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { getProductByQuery } from '../services/api';
+import PropTypes from 'prop-types';
+import { getProductByQuery, getProductByCategories } from '../services/api';
 import Card from './Card';
 
 export default class Search extends Component {
@@ -10,11 +11,25 @@ export default class Search extends Component {
     categoryId: '',
   };
 
-  handleChange = async ({ target }) => {
+  handleList = async () => {
     const { categorid } = this.props;
     const { categoryId } = this.state;
+    if (categorid !== categoryId) {
+      console.log('tá chamando');
+      if (categorid !== categoryId) {
+        this.setState({ categoryId: categorid });
+      }
+      if (categorid !== null) {
+        const queue = await getProductByCategories(categorid);
+        const { results } = queue;
+        this.setState({ lista: results });
+      }
+    }
+  };
+
+  handleChange = async ({ target }) => {
     const { name, value } = target;
-    this.setState({ [name]: value }, this.setState({ categoryId: categorid }));
+    this.setState({ [name]: value });
   };
 
   onSaveButtonClick = async (event) => {
@@ -33,14 +48,8 @@ export default class Search extends Component {
       });
   };
 
-  handleLista = () => {
-    const { categorid } = this.props;
-    if (categorid.length > 0) console.log('é maior q 0');
-  };
-
   render() {
-    const { productList } = this.state;
-    // this.teste(categorid);
+    const { productList, lista } = this.state;
     return (
       <form id="searchForm" onSubmit={ this.onSaveButtonClick }>
         <input
@@ -48,16 +57,16 @@ export default class Search extends Component {
           data-testid="query-input"
           name="search"
           onChange={ this.handleChange }
+          onSubmit={ this.handleList() }
         />
         <button
           type="submit"
           data-testid="query-button"
           name="pesquisar"
-          onClick={ this.handleLista }
         >
           Pesquisar
         </button>
-        <div id="cardProduct">
+        <div className="cardProduct">
           {
             productList.length >= 1 ? productList.map((item, index) => (
               <Card
@@ -69,8 +78,24 @@ export default class Search extends Component {
             )) : <p>Nenhum produto foi encontrado</p>
           }
         </div>
+        <div className="cardProduct">
+          {
+            lista.length >= 1 && lista.map((produto, index) => (
+              <Card
+                key={ index }
+                title={ produto.title }
+                price={ produto.price }
+                thumbnail={ produto.thumbnail }
+              />
+            ))
+          }
+        </div>
 
       </form>
     );
   }
 }
+
+Search.propTypes = {
+  categorid: PropTypes.string.isRequired,
+};

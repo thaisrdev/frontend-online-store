@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getCategories, getProductByCategories } from '../services/api';
 import Search from './Search';
-import Card from './Card';
 
 export default class Main extends Component {
   state = {
@@ -17,12 +16,10 @@ export default class Main extends Component {
   }
 
   getCategoriesProducts = async (event) => {
-    const { productList } = this.state;
+    // const { productList } = this.state;
     const { target } = event;
     const { id } = target;
     console.log(id);
-    const queue = await getProductByCategories(id);
-    const { results } = queue;
     getProductByCategories(id)
       .then(() => {
         this.setState({ categoryId: id });
@@ -70,4 +67,5 @@ export default class Main extends Component {
 }
 
 Main.propTypes = {
+  id: PropTypes.string.isRequired,
 };
