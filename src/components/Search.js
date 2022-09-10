@@ -1,11 +1,30 @@
 import React, { Component } from 'react';
-import { getProductByQuery } from '../services/api';
+import PropTypes from 'prop-types';
+import { getProductByQuery, getProductByCategories } from '../services/api';
 import Card from './Card';
 
 export default class Search extends Component {
   state = {
     search: '',
     productList: [],
+    lista: [],
+    categoryId: '',
+  };
+
+  handleList = async () => {
+    const { categorid } = this.props;
+    const { categoryId } = this.state;
+    if (categorid !== categoryId) {
+      console.log('tá chamando');
+      if (categorid !== categoryId) {
+        this.setState({ categoryId: categorid });
+      }
+      if (categorid !== null) {
+        const queue = await getProductByCategories(categorid);
+        const { results } = queue;
+        this.setState({ lista: results });
+      }
+    }
   };
 
   handleChange = async ({ target }) => {
@@ -30,7 +49,7 @@ export default class Search extends Component {
   };
 
   render() {
-    const { productList } = this.state;
+    const { productList, lista } = this.state;
     return (
       <form id="searchForm" onSubmit={ this.onSaveButtonClick }>
         <input
@@ -38,6 +57,7 @@ export default class Search extends Component {
           data-testid="query-input"
           name="search"
           onChange={ this.handleChange }
+          onSubmit={ this.handleList() }
         />
         <button
           type="submit"
@@ -46,7 +66,7 @@ export default class Search extends Component {
         >
           Pesquisar
         </button>
-        <div id="cardProduct">
+        <div className="cardProduct">
           {
             productList.length >= 1 ? productList.map((item, index) => (
               <Card
@@ -58,8 +78,24 @@ export default class Search extends Component {
             )) : <p>Nenhum produto foi encontrado</p>
           }
         </div>
+        <div className="cardProduct">
+          {
+            lista.length >= 1 && lista.map((produto, index) => (
+              <Card
+                key={ index }
+                title={ produto.title }
+                price={ produto.price }
+                thumbnail={ produto.thumbnail }
+              />
+            ))
+          }
+        </div>
 
       </form>
     );
   }
 }
+
+Search.propTypes = {
+  categorid: PropTypes.string.isRequired,
+};
