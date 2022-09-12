@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { getProductByQuery, getProductByCategories } from '../services/api';
 import Card from './Card';
 
@@ -81,12 +82,17 @@ export default class Search extends Component {
         <div className="cardProduct">
           {
             lista.length >= 1 && lista.map((produto, index) => (
-              <Card
+              <Link
                 key={ index }
-                title={ produto.title }
-                price={ produto.price }
-                thumbnail={ produto.thumbnail }
-              />
+                to={ `/product/${produto.id}` }
+                data-testid="product-detail-link"
+              >
+                <Card
+                  title={ produto.title }
+                  price={ produto.price }
+                  thumbnail={ produto.thumbnail }
+                />
+              </Link>
             ))
           }
         </div>
