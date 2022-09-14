@@ -8,22 +8,21 @@ export default class Search extends Component {
   state = {
     search: '',
     productList: [],
-    lista: [],
     categoryId: '',
+    addItem: [],
   };
 
   handleList = async () => {
     const { categorid } = this.props;
     const { categoryId } = this.state;
     if (categorid !== categoryId) {
-      console.log('tá chamando');
       if (categorid !== categoryId) {
         this.setState({ categoryId: categorid });
       }
       if (categorid !== null) {
         const queue = await getProductByCategories(categorid);
         const { results } = queue;
-        this.setState({ lista: results });
+        this.setState({ productList: results });
       }
     }
   };
@@ -49,8 +48,14 @@ export default class Search extends Component {
       });
   };
 
+  addToCart = (produto) => {
+    const { addItem } = this.state;
+    this.setState({ addItem: [...addItem, produto] });
+    localStorage.setItem('shoppingCart', JSON.stringify([...addItem, produto]));
+  };
+
   render() {
-    const { productList, lista } = this.state;
+    const { productList } = this.state;
     return (
       <form id="searchForm" onSubmit={ this.onSaveButtonClick }>
         <input
@@ -70,30 +75,28 @@ export default class Search extends Component {
         <div className="cardProduct">
           {
             productList.length >= 1 ? productList.map((item, index) => (
-              <Card
-                key={ index }
-                title={ item.title }
-                price={ item.price }
-                thumbnail={ item.thumbnail }
-              />
+              <div key={ index }>
+                <Link
+                  to={ `/product/${item.id}` }
+                  data-testid="product-detail-link"
+                >
+                  <Card
+                    key={ index }
+                    title={ item.title }
+                    price={ item.price }
+                    thumbnail={ item.thumbnail }
+                  />
+                </Link>
+                <button
+                  type="button"
+                  data-testid="product-add-to-cart"
+                  onClick={ () => this.addToCart(item) }
+                >
+                  Adicionar ao Carrinho
+                </button>
+              </div>
+
             )) : <p>Nenhum produto foi encontrado</p>
-          }
-        </div>
-        <div className="cardProduct">
-          {
-            lista.length >= 1 && lista.map((produto, index) => (
-              <Link
-                key={ index }
-                to={ `/product/${produto.id}` }
-                data-testid="product-detail-link"
-              >
-                <Card
-                  title={ produto.title }
-                  price={ produto.price }
-                  thumbnail={ produto.thumbnail }
-                />
-              </Link>
-            ))
           }
         </div>
 

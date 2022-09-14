@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getCategories, getProductByCategories } from '../services/api';
 import Search from './Search';
@@ -19,7 +18,6 @@ export default class Main extends Component {
     // const { productList } = this.state;
     const { target } = event;
     const { id } = target;
-    console.log(id);
     getProductByCategories(id)
       .then(() => {
         this.setState({ categoryId: id });
@@ -28,7 +26,6 @@ export default class Main extends Component {
 
   render() {
     const { categoryId, categories, productList } = this.state;
-    const { id } = this.props;
     return (
       <div id="categoryDiv">
         {' '}
@@ -46,7 +43,7 @@ export default class Main extends Component {
               type="radio"
               name="category"
               id={ element.id }
-              onChange={ this.getCategoriesProducts.bind(id) }
+              onChange={ this.getCategoriesProducts }
             />
           </label>))}
 
@@ -55,7 +52,7 @@ export default class Main extends Component {
         </p>
 
         <Link to="/Cart">
-          <button type="submit" data-testid="shopping-cart-button"> </button>
+          <button type="submit" data-testid="shopping-cart-button">Carrinho</button>
         </Link>
         <div className="categoryDiv">
           {productList.length >= 1 && this.getCategoriesProducts() }
@@ -65,7 +62,3 @@ export default class Main extends Component {
     );
   }
 }
-
-Main.propTypes = {
-  id: PropTypes.string.isRequired,
-};
