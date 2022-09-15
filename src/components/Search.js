@@ -12,23 +12,26 @@ export default class Search extends Component {
     addItem: [],
   };
 
+  // um fetch para carregar as categorias (3)
+  // mais um fetch par quando clico num elemento das categorias
+
   handleList = async () => {
     const { categorid } = this.props;
     const { categoryId } = this.state;
+    const queue = await getProductByCategories(categorid); // requisicao 2
     if (categorid !== categoryId) {
       if (categorid !== categoryId) {
         this.setState({ categoryId: categorid });
       }
       if (categorid !== null) {
-        const queue = await getProductByCategories(categorid);
         const { results } = queue;
         this.setState({ productList: results });
       }
     }
   };
 
-  handleChange = async ({ target }) => {
-    const { name, value } = target;
+  handleChange = async (event) => {
+    const { name, value } = event.target;
     this.setState({ [name]: value });
   };
 
@@ -37,7 +40,7 @@ export default class Search extends Component {
     const { name, value } = target;
     const { search } = this.state;
     event.preventDefault();
-    const list = await getProductByQuery(search);
+    const list = await getProductByQuery(search); // requisicao 3
     const { results } = list;
     getProductByQuery(search)
       .then(() => {
@@ -48,10 +51,16 @@ export default class Search extends Component {
       });
   };
 
-  addToCart = (produto) => {
-    const { addItem } = this.state;
-    this.setState({ addItem: [...addItem, produto] });
-    localStorage.setItem('shoppingCart', JSON.stringify([...addItem, produto]));
+  addToCart = (parametro) => {
+    const { productList } = this.state;
+    const produto = productList.find((element) => element.id === parametro);
+    this.setState((prevState) => {
+      localStorage
+        .setItem('cart', JSON.stringify([...prevState.addItem, produto]));
+      return ({
+        addItem: [...prevState.addItem, produto],
+      });
+    });
   };
 
   render() {
@@ -73,15 +82,14 @@ export default class Search extends Component {
           Pesquisar
         </button>
         <div className="cardProduct">
-          {
-            productList.length >= 1 ? productList.map((item, index) => (
-              <div key={ index }>
+          { (productList.length === 0) ? (<p>Nenhum produto foi encontrado</p>)
+            : (productList.map((item) => (
+              <div key={ item.id }>
                 <Link
                   to={ `/product/${item.id}` }
                   data-testid="product-detail-link"
                 >
                   <Card
-                    key={ index }
                     title={ item.title }
                     price={ item.price }
                     thumbnail={ item.thumbnail }
@@ -90,14 +98,14 @@ export default class Search extends Component {
                 <button
                   type="button"
                   data-testid="product-add-to-cart"
-                  onClick={ () => this.addToCart(item) }
+                  onClick={ () => this.addToCart(item.id) }
                 >
                   Adicionar ao Carrinho
                 </button>
               </div>
 
-            )) : <p>Nenhum produto foi encontrado</p>
-          }
+            )))}
+          ;
         </div>
 
       </form>

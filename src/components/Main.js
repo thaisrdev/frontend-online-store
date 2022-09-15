@@ -14,8 +14,7 @@ export default class Main extends Component {
     getCategories().then((response) => this.setState({ categories: response }));
   }
 
-  getCategoriesProducts = async (event) => {
-    // const { productList } = this.state;
+  getCategoriesProducts = async (event) => { // requisicao 1
     const { target } = event;
     const { id } = target;
     getProductByCategories(id)
@@ -51,8 +50,8 @@ export default class Main extends Component {
           Digite algum termo de pesquisa ou escolha uma categoria.
         </p>
 
-        <Link to="/Cart">
-          <button type="submit" data-testid="shopping-cart-button">Carrinho</button>
+        <Link to="/cart" data-testid="shopping-cart-button">
+          <button type="button">Carrinho</button>
         </Link>
         <div className="categoryDiv">
           {productList.length >= 1 && this.getCategoriesProducts() }

@@ -12,7 +12,7 @@ export default class Details extends Component {
     const { match } = this.props;
     const { params } = match;
     const { id } = params;
-    getProductById(id).then((response) => this.setState({ product: response }));
+    getProductById(id).then((response) => this.setState({ product: response })); // requisicao 4
   }
 
   render() {

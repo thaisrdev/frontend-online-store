@@ -10,14 +10,8 @@ export default class App extends Component {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={ Main } />
-          <Route
-            path="/Cart"
-            render={ (props) => (
-              <Cart
-                { ...props }
-              />) }
-          />
           <Route path="/product/:id" component={ Details } />
+          <Route path="/cart" component={ Cart } />
         </Switch>
       </BrowserRouter>
 
