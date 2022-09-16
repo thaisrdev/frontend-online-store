@@ -90,6 +90,7 @@ export default class Main extends Component {
                     title={ item.title }
                     price={ item.price }
                     thumbnail={ item.thumbnail }
+                    productList={ productList }
                   />
                 </Link>
                 <button
