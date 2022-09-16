@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { getProductByQuery, getProductByCategories } from '../services/api';
-import Card from './Card';
+import { getProductByQuery } from '../services/api';
 
 export default class Search extends Component {
   state = {
     search: '',
-    productList: [],
-    categoryId: '',
-    addItem: [],
+    // productList: [],
+    //  categoryId: '',
+    //  addItem: [],
   };
 
   // um fetch para carregar as categorias (3)
   // mais um fetch par quando clico num elemento das categorias
 
-  handleList = async () => {
+  /*   handleList = async () => {
     const { categorid } = this.props;
-    const { categoryId } = this.state;
     const queue = await getProductByCategories(categorid); // requisicao 2
     if (categorid !== categoryId) {
       if (categorid !== categoryId) {
@@ -28,7 +25,7 @@ export default class Search extends Component {
         this.setState({ productList: results });
       }
     }
-  };
+  }; */
 
   handleChange = async (event) => {
     const { name, value } = event.target;
@@ -36,35 +33,36 @@ export default class Search extends Component {
   };
 
   onSaveButtonClick = async (event) => {
-    const { target } = event;
-    const { name, value } = target;
+    // const { target } = event;
+    const { getProductList } = this.props;
+    //  const { name, value } = target;
     const { search } = this.state;
     event.preventDefault();
-    const list = await getProductByQuery(search); // requisicao 3
+    const list = await getProductByQuery(search);
     const { results } = list;
-    getProductByQuery(search)
+    getProductList(results);
+  /*   getProductByQuery(search)
       .then(() => {
         this.setState({ [name]: value });
       })
       .then(() => {
         this.setState({ productList: results });
-      });
+      }); */
   };
 
-  addToCart = (parametro) => {
-    const { productList } = this.state;
-    const produto = productList.find((element) => element.id === parametro);
-    this.setState((prevState) => {
-      localStorage
-        .setItem('cart', JSON.stringify([...prevState.addItem, produto]));
-      return ({
-        addItem: [...prevState.addItem, produto],
-      });
-    });
-  };
+  // addToCart = (parametro) => {
+  //   const { productList } = this.state;
+  //   const produto = productList.find((element) => element.id === parametro);
+  //   this.setState((prevState) => {
+  //     localStorage
+  //       .setItem('cart', JSON.stringify([...prevState.addItem, produto]));
+  //     return ({
+  //       addItem: [...prevState.addItem, produto],
+  //     });
+  //   });
+  // };
 
   render() {
-    const { productList } = this.state;
     return (
       <form id="searchForm" onSubmit={ this.onSaveButtonClick }>
         <input
@@ -72,7 +70,7 @@ export default class Search extends Component {
           data-testid="query-input"
           name="search"
           onChange={ this.handleChange }
-          onSubmit={ this.handleList() }
+        //  onSubmit={ this.handleList() }
         />
         <button
           type="submit"
@@ -81,7 +79,7 @@ export default class Search extends Component {
         >
           Pesquisar
         </button>
-        <div className="cardProduct">
+        {/* <div className="cardProduct">
           { (productList.length === 0) ? (<p>Nenhum produto foi encontrado</p>)
             : (productList.map((item) => (
               <div key={ item.id }>
@@ -106,7 +104,7 @@ export default class Search extends Component {
 
             )))}
           ;
-        </div>
+        </div> */}
 
       </form>
     );
@@ -114,5 +112,5 @@ export default class Search extends Component {
 }
 
 Search.propTypes = {
-  categorid: PropTypes.string.isRequired,
+  getProductList: PropTypes.func.isRequired,
 };

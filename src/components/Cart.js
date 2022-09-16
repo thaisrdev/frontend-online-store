@@ -10,8 +10,8 @@ class Cart extends Component {
   }
 
   renderCart = () => {
-    if (localStorage.getItem('cart')) {
-      const renderProducts = JSON.parse(localStorage.getItem('cart'));
+    if (localStorage.getItem('shoppingCart')) {
+      const renderProducts = JSON.parse(localStorage.getItem('shoppingCart'));
       this.setState({ cartProducts: renderProducts });
     }
   };
