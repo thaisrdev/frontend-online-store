@@ -1,12 +1,42 @@
 import React, { Component } from 'react';
 
-export default class Cart extends Component {
+class Cart extends Component {
+  state = {
+    cartProducts: [],
+  };
+
+  componentDidMount() {
+    this.renderCart();
+  }
+
+  renderCart = () => {
+    if (localStorage.getItem('shoppingCart')) {
+      const renderProducts = JSON.parse(localStorage.getItem('shoppingCart'));
+      this.setState({ cartProducts: renderProducts });
+    }
+  };
+
   render() {
+    const { cartProducts } = this.state;
+    const quantity = 1;
     return (
-      <p data-testid="shopping-cart-empty-message">Seu carrinho está vazio</p>
+      <div>
+        {
+          cartProducts.map((element) => (
+            <div key={ element.id }>
+              <p data-testid="shopping-cart-product-name">{ element.title }</p>
+              <p data-testid="shopping-cart-product-quantity">{ quantity }</p>
+              <p>{ element.price }</p>
+            </div>))
+        }
+        {
+          (cartProducts.length === 0)
+            && (<p data-testid="shopping-cart-empty-message">Seu carrinho está vazio</p>)
+        }
+
+      </div>
     );
   }
 }
 
-// Quando não existirem produtos no carrinho de compras, a página deve exibir a mensagem "Seu carrinho está vazio";
-// Adicione o atributo data-testid com o valor shopping-cart-empty-message no elemento da mensagem.
+export default Cart;
