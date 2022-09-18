@@ -16,9 +16,17 @@ class Cart extends Component {
     }
   };
 
+  removeProduct = (parametro) => {
+    const { cartProducts } = this.state;
+    const findByIndex = cartProducts.findIndex((element) => element.id === parametro);
+    const updatedArray = [...cartProducts.slice(0, findByIndex),
+      ...cartProducts.slice((findByIndex + 1), (cartProducts.length))];
+    this.setState({ cartProducts: updatedArray });
+  };
+
   render() {
     const { cartProducts } = this.state;
-    const quantity = 1;
+    const quantity = 1; // mudar pra let se conseguir fazer adição e subtração
     return (
       <div>
         {
@@ -27,6 +35,30 @@ class Cart extends Component {
               <p data-testid="shopping-cart-product-name">{ element.title }</p>
               <p data-testid="shopping-cart-product-quantity">{ quantity }</p>
               <p>{ element.price }</p>
+              {/* <button
+                type="button"
+                data-testid="product-increase-quantity"
+                onClick={ () => this.increaseQuantity(element.id) }
+              >
+                +
+
+              </button>
+              <button
+                type="button"
+                data-testid="product-decrease-quantity"
+                onClick={ () => this.decreaseQuantity(element.id) }
+              >
+                -
+
+              </button> */}
+              <button
+                type="button"
+                data-testid="remove-product"
+                onClick={ () => this.removeProduct(element.id) }
+              >
+                remover
+
+              </button>
             </div>))
         }
         {
