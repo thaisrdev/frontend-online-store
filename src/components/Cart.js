@@ -21,15 +21,18 @@ class Cart extends Component {
     const findByIndex = cartProducts.findIndex((element) => element.id === parametro);
     const updatedArray = [...cartProducts.slice(0, findByIndex), // no slice o segundo valor é não incluso
       ...cartProducts.slice((findByIndex + 1), (cartProducts.length))];
-    this.setState({ cartProducts: updatedArray });
+    this.setState(
+      { cartProducts: updatedArray },
+      localStorage.setItem('shoppingCart', JSON.stringify(updatedArray)),
+    );
   };
 
   increaseQuantity = (parametro) => {
     const { cartProducts } = this.state;
     const updatedArray = cartProducts.map((element) => {
       const { available_quantity: availableQuantity } = element;
-      if (element.id === parametro && availableQuantity > element.order_backend) {
-        element.order_backend += 1;
+      if (element.id === parametro && availableQuantity > element.quantity) {
+        element.quantity += 1;
         return element;
       }
       return element;
@@ -42,10 +45,10 @@ class Cart extends Component {
   decreaseQuantity = (parametro) => {
     const { cartProducts } = this.state;
     const produto = cartProducts.find((element) => element.id === parametro);
-    if (produto.order_backend > 1) {
-      produto.order_backend -= 1;
+    if (produto.quantity > 1) {
+      produto.quantity -= 1;
     }
-    if (produto.order_backend === 1) {
+    if (produto.quantity === 0) {
       this.removeProduct(produto.id);
     }
     this.setState({
@@ -63,7 +66,7 @@ class Cart extends Component {
             <div key={ element.id }>
               <p data-testid="shopping-cart-product-name">{ element.title }</p>
               <p data-testid="shopping-cart-product-quantity">
-                { element.order_backend }
+                { element.quantity }
 
               </p>
               <p>{ element.price }</p>
