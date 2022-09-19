@@ -18,6 +18,7 @@ export default class Details extends Component {
 
   addToCartDetail = () => {
     const { product } = this.state;
+    product.quantity = 1;
     addItem(product);
   };
 

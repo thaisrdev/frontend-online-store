@@ -29,6 +29,7 @@ export default class Main extends Component {
   addToCart = (parametro) => {
     const { productList } = this.state;
     const produto = productList.find((element) => element.id === parametro);
+    produto.quantity = 1;
     addItem(produto);
 
     // this.setState((prevState) => {
